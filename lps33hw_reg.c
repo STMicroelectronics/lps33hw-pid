@@ -411,15 +411,15 @@ int32_t lps33hw_low_pass_filter_mode_get(const stmdev_ctx_t *ctx,
 
   switch (ctrl_reg1.lpfp)
   {
-    case LPS33HW_LPF_ODR_DIV_2:
+    case 0x00:
       *val = LPS33HW_LPF_ODR_DIV_2;
       break;
 
-    case LPS33HW_LPF_ODR_DIV_9:
+    case 0x02:
       *val = LPS33HW_LPF_ODR_DIV_9;
       break;
 
-    case LPS33HW_LPF_ODR_DIV_20:
+    case 0x03:
       *val = LPS33HW_LPF_ODR_DIV_20;
       break;
 
@@ -474,27 +474,27 @@ int32_t lps33hw_data_rate_get(const stmdev_ctx_t *ctx, lps33hw_odr_t *val)
 
   switch (ctrl_reg1.odr)
   {
-    case LPS33HW_POWER_DOWN:
+    case 0x00:
       *val = LPS33HW_POWER_DOWN;
       break;
 
-    case LPS33HW_ODR_1_Hz:
+    case 0x01:
       *val = LPS33HW_ODR_1_Hz;
       break;
 
-    case LPS33HW_ODR_10_Hz:
+    case 0x02:
       *val = LPS33HW_ODR_10_Hz;
       break;
 
-    case LPS33HW_ODR_25_Hz:
+    case 0x03:
       *val = LPS33HW_ODR_25_Hz;
       break;
 
-    case LPS33HW_ODR_50_Hz:
+    case 0x04:
       *val = LPS33HW_ODR_50_Hz;
       break;
 
-    case LPS33HW_ODR_75_Hz:
+    case 0x05:
       *val = LPS33HW_ODR_75_Hz;
       break;
 
@@ -1071,19 +1071,19 @@ int32_t lps33hw_sign_of_int_threshold_get(const stmdev_ctx_t *ctx,
 
   switch (interrupt_cfg.pe)
   {
-    case LPS33HW_NO_THRESHOLD:
+    case 0x00:
       *val = LPS33HW_NO_THRESHOLD;
       break;
 
-    case LPS33HW_POSITIVE:
+    case 0x01:
       *val = LPS33HW_POSITIVE;
       break;
 
-    case LPS33HW_NEGATIVE:
+    case 0x02:
       *val = LPS33HW_NEGATIVE;
       break;
 
-    case LPS33HW_BOTH:
+    case 0x03:
       *val = LPS33HW_BOTH;
       break;
 
@@ -1145,11 +1145,11 @@ int32_t lps33hw_int_notification_mode_get(const stmdev_ctx_t *ctx,
 
   switch (interrupt_cfg.lir)
   {
-    case LPS33HW_INT_PULSED:
+    case 0x00:
       *val = LPS33HW_INT_PULSED;
       break;
 
-    case LPS33HW_INT_LATCHED:
+    case 0x01:
       *val = LPS33HW_INT_LATCHED;
       break;
 
@@ -1298,19 +1298,19 @@ int32_t lps33hw_int_pin_mode_get(const stmdev_ctx_t *ctx,
 
   switch (ctrl_reg3.int_s)
   {
-    case LPS33HW_DRDY_OR_FIFO_FLAGS:
+    case 0x00:
       *val = LPS33HW_DRDY_OR_FIFO_FLAGS;
       break;
 
-    case LPS33HW_HIGH_PRES_INT:
+    case 0x01:
       *val = LPS33HW_HIGH_PRES_INT;
       break;
 
-    case LPS33HW_LOW_PRES_INT:
+    case 0x02:
       *val = LPS33HW_LOW_PRES_INT;
       break;
 
-    case LPS33HW_EVERY_PRES_INT:
+    case 0x03:
       *val = LPS33HW_EVERY_PRES_INT;
       break;
 
@@ -1551,11 +1551,11 @@ int32_t lps33hw_pin_mode_get(const stmdev_ctx_t *ctx, lps33hw_pp_od_t *val)
 
   switch (ctrl_reg3.pp_od)
   {
-    case LPS33HW_PUSH_PULL:
+    case 0x00:
       *val = LPS33HW_PUSH_PULL;
       break;
 
-    case LPS33HW_OPEN_DRAIN:
+    case 0x01:
       *val = LPS33HW_OPEN_DRAIN;
       break;
 
@@ -1612,11 +1612,11 @@ int32_t lps33hw_int_polarity_get(const stmdev_ctx_t *ctx,
 
   switch (ctrl_reg3.int_h_l)
   {
-    case LPS33HW_ACTIVE_HIGH:
+    case 0x00:
       *val = LPS33HW_ACTIVE_HIGH;
       break;
 
-    case LPS33HW_ACTIVE_LOW:
+    case 0x01:
       *val = LPS33HW_ACTIVE_LOW;
       break;
 
@@ -1912,31 +1912,31 @@ int32_t lps33hw_fifo_mode_get(const stmdev_ctx_t *ctx,
 
   switch (fifo_ctrl.f_mode)
   {
-    case LPS33HW_BYPASS_MODE:
+    case 0x00:
       *val = LPS33HW_BYPASS_MODE;
       break;
 
-    case LPS33HW_FIFO_MODE:
+    case 0x01:
       *val = LPS33HW_FIFO_MODE;
       break;
 
-    case LPS33HW_STREAM_MODE:
+    case 0x02:
       *val = LPS33HW_STREAM_MODE;
       break;
 
-    case LPS33HW_STREAM_TO_FIFO_MODE:
+    case 0x03:
       *val = LPS33HW_STREAM_TO_FIFO_MODE;
       break;
 
-    case LPS33HW_BYPASS_TO_STREAM_MODE:
+    case 0x04:
       *val = LPS33HW_BYPASS_TO_STREAM_MODE;
       break;
 
-    case LPS33HW_DYNAMIC_STREAM_MODE:
+    case 0x06:
       *val = LPS33HW_DYNAMIC_STREAM_MODE;
       break;
 
-    case LPS33HW_BYPASS_TO_FIFO_MODE:
+    case 0x07:
       *val = LPS33HW_BYPASS_TO_FIFO_MODE;
       break;
 
@@ -2073,11 +2073,11 @@ int32_t lps33hw_spi_mode_get(const stmdev_ctx_t *ctx, lps33hw_sim_t *val)
 
   switch (ctrl_reg1.sim)
   {
-    case LPS33HW_SPI_4_WIRE:
+    case 0x00:
       *val = LPS33HW_SPI_4_WIRE;
       break;
 
-    case LPS33HW_SPI_3_WIRE:
+    case 0x01:
       *val = LPS33HW_SPI_3_WIRE;
       break;
 
@@ -2134,11 +2134,11 @@ int32_t lps33hw_i2c_interface_get(const stmdev_ctx_t *ctx,
 
   switch (ctrl_reg2.i2c_dis)
   {
-    case LPS33HW_I2C_ENABLE:
+    case 0x00:
       *val = LPS33HW_I2C_ENABLE;
       break;
 
-    case LPS33HW_I2C_DISABLE:
+    case 0x01:
       *val = LPS33HW_I2C_DISABLE;
       break;
 
