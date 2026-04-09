@@ -142,7 +142,7 @@ int32_t lps33hw_autozero_rst_set(const stmdev_ctx_t *ctx, uint8_t val)
 
   if (ret == 0)
   {
-    interrupt_cfg.reset_az = val;
+    interrupt_cfg.reset_az = val & 0x01U;
     ret = lps33hw_write_reg(ctx, LPS33HW_INTERRUPT_CFG,
                             (uint8_t *)&interrupt_cfg, 1);
   }
@@ -191,7 +191,7 @@ int32_t lps33hw_autozero_set(const stmdev_ctx_t *ctx, uint8_t val)
 
   if (ret == 0)
   {
-    interrupt_cfg.autozero = val;
+    interrupt_cfg.autozero = val & 0x01U;
     ret = lps33hw_write_reg(ctx, LPS33HW_INTERRUPT_CFG,
                             (uint8_t *)&interrupt_cfg, 1);
   }
@@ -240,7 +240,7 @@ int32_t lps33hw_pressure_snap_rst_set(const stmdev_ctx_t *ctx, uint8_t val)
 
   if (ret == 0)
   {
-    interrupt_cfg.reset_arp = val;
+    interrupt_cfg.reset_arp = val & 0x01U;
     ret = lps33hw_write_reg(ctx, LPS33HW_INTERRUPT_CFG,
                             (uint8_t *)&interrupt_cfg, 1);
   }
@@ -289,7 +289,7 @@ int32_t lps33hw_pressure_snap_set(const stmdev_ctx_t *ctx, uint8_t val)
 
   if (ret == 0)
   {
-    interrupt_cfg.autorifp = val;
+    interrupt_cfg.autorifp = val & 0x01U;
     ret = lps33hw_write_reg(ctx, LPS33HW_INTERRUPT_CFG,
                             (uint8_t *)&interrupt_cfg, 1);
   }
@@ -337,7 +337,7 @@ int32_t lps33hw_block_data_update_set(const stmdev_ctx_t *ctx, uint8_t val)
 
   if (ret == 0)
   {
-    ctrl_reg1.bdu = val;
+    ctrl_reg1.bdu = val & 0x01U;
     ret = lps33hw_write_reg(ctx, LPS33HW_CTRL_REG1, (uint8_t *)&ctrl_reg1, 1);
   }
 
@@ -384,7 +384,7 @@ int32_t lps33hw_low_pass_filter_mode_set(const stmdev_ctx_t *ctx,
 
   if (ret == 0)
   {
-    ctrl_reg1.lpfp = (uint8_t)val;
+    ctrl_reg1.lpfp = (uint8_t)val & 0x03U;
     ret = lps33hw_write_reg(ctx, LPS33HW_CTRL_REG1, (uint8_t *)&ctrl_reg1, 1);
   }
 
@@ -448,7 +448,7 @@ int32_t lps33hw_data_rate_set(const stmdev_ctx_t *ctx, lps33hw_odr_t val)
 
   if (ret == 0)
   {
-    ctrl_reg1.odr = (uint8_t)val;
+    ctrl_reg1.odr = (uint8_t)val & 0x07U;
     ret = lps33hw_write_reg(ctx, LPS33HW_CTRL_REG1, (uint8_t *)&ctrl_reg1, 1);
   }
 
@@ -523,7 +523,7 @@ int32_t lps33hw_one_shoot_trigger_set(const stmdev_ctx_t *ctx, uint8_t val)
 
   if (ret == 0)
   {
-    ctrl_reg2.one_shot = val;
+    ctrl_reg2.one_shot = val & 0x01U;
     ret = lps33hw_write_reg(ctx, LPS33HW_CTRL_REG2, (uint8_t *)&ctrl_reg2, 1);
   }
 
@@ -568,7 +568,7 @@ int32_t lps33hw_pressure_ref_set(const stmdev_ctx_t *ctx, int32_t val)
   int32_t ret;
 
   buff[2] = (uint8_t)((uint32_t)val / 65536U);
-  buff[1] = (uint8_t)((uint32_t)val - (buff[2] * 65536U)) / 256U;
+  buff[1] = (uint8_t)(((uint32_t)val - (buff[2] * 65536U)) / 256U);
   buff[0] = (uint8_t)((uint32_t)val - (buff[2] * 65536U) -
                       (buff[1] * 256U));
   ret =  lps33hw_write_reg(ctx, LPS33HW_REF_P_XL, buff, 3);
@@ -641,8 +641,7 @@ int32_t lps33hw_pressure_offset_get(const stmdev_ctx_t *ctx, int16_t *val)
 
   if (ret != 0) { return ret; }
 
-  *val = (int16_t)buff[1];
-  *val = (*val * 256) + (int16_t)buff[0];
+  *val = (int16_t)(buff[0] | ((uint16_t)buff[1] << 8));
 
   return ret;
 }
@@ -777,8 +776,7 @@ int32_t lps33hw_temperature_raw_get(const stmdev_ctx_t *ctx, int16_t *buff)
 
   if (ret != 0) { return ret; }
 
-  *buff = reg[1];
-  *buff = (*buff * 256) + reg[0];
+  *buff = (int16_t)(reg[0] | ((uint16_t)reg[1] << 8));
 
   return ret;
 }
@@ -849,7 +847,7 @@ int32_t lps33hw_reset_set(const stmdev_ctx_t *ctx, uint8_t val)
 
   if (ret == 0)
   {
-    ctrl_reg2.swreset = val;
+    ctrl_reg2.swreset = val & 0x01U;
     ret = lps33hw_write_reg(ctx, LPS33HW_CTRL_REG2, (uint8_t *)&ctrl_reg2, 1);
   }
 
@@ -895,7 +893,7 @@ int32_t lps33hw_boot_set(const stmdev_ctx_t *ctx, uint8_t val)
 
   if (ret == 0)
   {
-    ctrl_reg2.boot = val;
+    ctrl_reg2.boot = val & 0x01U;
     ret = lps33hw_write_reg(ctx, LPS33HW_CTRL_REG2, (uint8_t *)&ctrl_reg2, 1);
   }
 
@@ -941,7 +939,7 @@ int32_t lps33hw_low_power_set(const stmdev_ctx_t *ctx, uint8_t val)
 
   if (ret == 0)
   {
-    res_conf.lc_en = val;
+    res_conf.lc_en = val & 0x01U;
     ret = lps33hw_write_reg(ctx, LPS33HW_RES_CONF, (uint8_t *)&res_conf, 1);
   }
 
@@ -1042,7 +1040,7 @@ int32_t lps33hw_sign_of_int_threshold_set(const stmdev_ctx_t *ctx,
 
   if (ret == 0)
   {
-    interrupt_cfg.pe = (uint8_t)val;
+    interrupt_cfg.pe = (uint8_t)val & 0x03U;
     ret = lps33hw_write_reg(ctx, LPS33HW_INTERRUPT_CFG,
                             (uint8_t *)&interrupt_cfg, 1);
   }
@@ -1115,7 +1113,7 @@ int32_t lps33hw_int_notification_mode_set(const stmdev_ctx_t *ctx,
 
   if (ret == 0)
   {
-    interrupt_cfg.lir = (uint8_t)val;
+    interrupt_cfg.lir = (uint8_t)val & 0x01U;
     ret = lps33hw_write_reg(ctx, LPS33HW_INTERRUPT_CFG,
                             (uint8_t *)&interrupt_cfg, 1);
   }
@@ -1179,7 +1177,7 @@ int32_t lps33hw_int_generation_set(const stmdev_ctx_t *ctx, uint8_t val)
 
   if (ret == 0)
   {
-    interrupt_cfg.diff_en = val;
+    interrupt_cfg.diff_en = val & 0x01U;
     ret = lps33hw_write_reg(ctx, LPS33HW_INTERRUPT_CFG,
                             (uint8_t *)&interrupt_cfg, 1);
   }
@@ -1247,8 +1245,7 @@ int32_t lps33hw_int_threshold_get(const stmdev_ctx_t *ctx, uint16_t *val)
 
   if (ret != 0) { return ret; }
 
-  *val = buff[1];
-  *val = (*val * 256) + buff[0];
+  *val = (uint16_t)(buff[0] | ((uint16_t)buff[1] << 8));
 
   return ret;
 }
@@ -1271,7 +1268,7 @@ int32_t lps33hw_int_pin_mode_set(const stmdev_ctx_t *ctx,
 
   if (ret == 0)
   {
-    ctrl_reg3.int_s = (uint8_t)val;
+    ctrl_reg3.int_s = (uint8_t)val & 0x03U;
     ret = lps33hw_write_reg(ctx, LPS33HW_CTRL_REG3, (uint8_t *)&ctrl_reg3, 1);
   }
 
@@ -1339,7 +1336,7 @@ int32_t lps33hw_drdy_on_int_set(const stmdev_ctx_t *ctx, uint8_t val)
 
   if (ret == 0)
   {
-    ctrl_reg3.drdy = val;
+    ctrl_reg3.drdy = val & 0x01U;
     ret = lps33hw_write_reg(ctx, LPS33HW_CTRL_REG3, (uint8_t *)&ctrl_reg3, 1);
   }
 
@@ -1385,7 +1382,7 @@ int32_t lps33hw_fifo_ovr_on_int_set(const stmdev_ctx_t *ctx, uint8_t val)
 
   if (ret == 0)
   {
-    ctrl_reg3.f_ovr = val;
+    ctrl_reg3.f_ovr = val & 0x01U;
     ret = lps33hw_write_reg(ctx, LPS33HW_CTRL_REG3, (uint8_t *)&ctrl_reg3, 1);
   }
 
@@ -1432,7 +1429,7 @@ int32_t lps33hw_fifo_threshold_on_int_set(const stmdev_ctx_t *ctx,
 
   if (ret == 0)
   {
-    ctrl_reg3.f_fth = val;
+    ctrl_reg3.f_fth = val & 0x01U;
     ret = lps33hw_write_reg(ctx, LPS33HW_CTRL_REG3, (uint8_t *)&ctrl_reg3, 1);
   }
 
@@ -1479,7 +1476,7 @@ int32_t lps33hw_fifo_full_on_int_set(const stmdev_ctx_t *ctx, uint8_t val)
 
   if (ret == 0)
   {
-    ctrl_reg3.f_fss5 = val;
+    ctrl_reg3.f_fss5 = val & 0x01U;
     ret = lps33hw_write_reg(ctx, LPS33HW_CTRL_REG3, (uint8_t *)&ctrl_reg3, 1);
   }
 
@@ -1525,7 +1522,7 @@ int32_t lps33hw_pin_mode_set(const stmdev_ctx_t *ctx, lps33hw_pp_od_t val)
 
   if (ret == 0)
   {
-    ctrl_reg3.pp_od = (uint8_t)val;
+    ctrl_reg3.pp_od = (uint8_t)val & 0x01U;
     ret = lps33hw_write_reg(ctx, LPS33HW_CTRL_REG3, (uint8_t *)&ctrl_reg3, 1);
   }
 
@@ -1585,7 +1582,7 @@ int32_t lps33hw_int_polarity_set(const stmdev_ctx_t *ctx,
 
   if (ret == 0)
   {
-    ctrl_reg3.int_h_l = (uint8_t)val;
+    ctrl_reg3.int_h_l = (uint8_t)val & 0x01U;
     ret = lps33hw_write_reg(ctx, LPS33HW_CTRL_REG3, (uint8_t *)&ctrl_reg3, 1);
   }
 
@@ -1746,7 +1743,7 @@ int32_t lps33hw_stop_on_fifo_threshold_set(const stmdev_ctx_t *ctx,
 
   if (ret == 0)
   {
-    ctrl_reg2.stop_on_fth = val;
+    ctrl_reg2.stop_on_fth = val & 0x01U;
     ret = lps33hw_write_reg(ctx, LPS33HW_CTRL_REG2, (uint8_t *)&ctrl_reg2, 1);
   }
 
@@ -1793,7 +1790,7 @@ int32_t lps33hw_fifo_set(const stmdev_ctx_t *ctx, uint8_t val)
 
   if (ret == 0)
   {
-    ctrl_reg2.fifo_en = val;
+    ctrl_reg2.fifo_en = val & 0x01U;
     ret = lps33hw_write_reg(ctx, LPS33HW_CTRL_REG2, (uint8_t *)&ctrl_reg2, 1);
   }
 
@@ -1839,7 +1836,7 @@ int32_t lps33hw_fifo_watermark_set(const stmdev_ctx_t *ctx, uint8_t val)
 
   if (ret == 0)
   {
-    fifo_ctrl.wtm = val;
+    fifo_ctrl.wtm = val & 0x1FU;
     ret = lps33hw_write_reg(ctx, LPS33HW_FIFO_CTRL, (uint8_t *)&fifo_ctrl, 1);
   }
 
@@ -1885,7 +1882,7 @@ int32_t lps33hw_fifo_mode_set(const stmdev_ctx_t *ctx, lps33hw_f_mode_t val)
 
   if (ret == 0)
   {
-    fifo_ctrl.f_mode = (uint8_t)val;
+    fifo_ctrl.f_mode = (uint8_t)val & 0x07U;
     ret = lps33hw_write_reg(ctx, LPS33HW_FIFO_CTRL, (uint8_t *)&fifo_ctrl, 1);
   }
 
@@ -2047,7 +2044,7 @@ int32_t lps33hw_spi_mode_set(const stmdev_ctx_t *ctx, lps33hw_sim_t val)
 
   if (ret == 0)
   {
-    ctrl_reg1.sim = (uint8_t)val;
+    ctrl_reg1.sim = (uint8_t)val & 0x01U;
     ret = lps33hw_write_reg(ctx, LPS33HW_CTRL_REG1, (uint8_t *)&ctrl_reg1, 1);
   }
 
@@ -2107,7 +2104,7 @@ int32_t lps33hw_i2c_interface_set(const stmdev_ctx_t *ctx,
 
   if (ret == 0)
   {
-    ctrl_reg2.i2c_dis = (uint8_t)val;
+    ctrl_reg2.i2c_dis = (uint8_t)val & 0x01U;
     ret = lps33hw_write_reg(ctx, LPS33HW_CTRL_REG2, (uint8_t *)&ctrl_reg2, 1);
   }
 
@@ -2168,7 +2165,7 @@ int32_t lps33hw_auto_add_inc_set(const stmdev_ctx_t *ctx, uint8_t val)
 
   if (ret == 0)
   {
-    ctrl_reg2.if_add_inc = val;
+    ctrl_reg2.if_add_inc = val & 0x01U;
     ret = lps33hw_write_reg(ctx, LPS33HW_CTRL_REG2, (uint8_t *)&ctrl_reg2, 1);
   }
 
